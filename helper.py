@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np 
 from IPython import display
 
 plt.ion()
@@ -7,7 +8,12 @@ def plot(scores, mean_scores):
     display.clear_output(wait=True)
     display.display(plt.gcf())
     plt.clf()
-    plt.title('Training Progress', fontsize=16, fontweight='bold')
+    
+    # Calculate standard deviation
+    std_deviation = np.std(scores)
+    
+    # Include standard deviation in the plot title
+    plt.title(f'Training Progress - σ: {std_deviation:.2f}', fontsize=16, fontweight='bold')
     plt.xlabel('Number of Games', fontsize=12)
     plt.ylabel('Score', fontsize=12)
     
@@ -17,23 +23,32 @@ def plot(scores, mean_scores):
     # Plot mean scores
     plt.plot(mean_scores, label='Mean Score', color='red', linestyle='-')
     
-    # Last score
-    plt.scatter(len(scores)-1, scores[-1], color='blue', marker='o', s=50)
-    plt.scatter(len(mean_scores)-1, mean_scores[-1], color='red', marker='o', s=50)
+    plt.legend(loc='upper left')
+    plt.grid(True)
+    plt.show()
+
+def plot_two(score_one, score_two, mean_score_one, mean_score_two):
+    display.clear_output(wait=True)
+    display.display(plt.gcf())
+    plt.clf()
     
-    plt.text(len(scores)-1, scores[-1], str(scores[-1]), fontsize=10, verticalalignment='bottom')
-    plt.text(len(mean_scores)-1, mean_scores[-1], str(mean_scores[-1]), fontsize=10, verticalalignment='bottom')
+    # Calculate standard deviation
+    std_deviation_one = np.std(score_one)
+    std_deviation_two = np.std(score_two)
     
-    plt.legend(loc='upper left', fontsize=10)
+    # Include standard deviation in the plot title
+    plt.title(f'Training Progress - σ: {std_deviation_one:.2f} , {std_deviation_two:.2f}', fontsize=16, fontweight='bold')
+    plt.xlabel('Number of Games', fontsize=12)
+    plt.ylabel('Score', fontsize=12)
     
-    plt.grid(True, linestyle='--', alpha=0.5)
+    # Plot scores
+    plt.plot(score_one, label='Score 1', color='blue', linestyle='-')
+    plt.plot(score_two, label='Score 2', color='red', linestyle='-')
     
-    # Y-axis limit
-    max_score = max(max(scores), max(mean_scores))
-    plt.ylim(0, max_score + max_score * 0.1)
+    # Plot mean scores
+    plt.plot(mean_score_one, label='Mean Score 1', color='darkblue', linestyle='-')
+    plt.plot(mean_score_two, label='Mean Score 2', color='darkred', linestyle='-')
     
-    # Set axis limits
-    plt.xlim(0, max(len(scores), len(mean_scores)))
-    
-    plt.show(block=False)
-    plt.pause(0.1)
+    plt.legend(loc='upper left')
+    plt.grid(True)
+    plt.show()
