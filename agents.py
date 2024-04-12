@@ -4,9 +4,9 @@ import pygame
 import time
 import numpy as np
 from collections import deque
-from game import SnakeGameOne, SnakeGameTwo, Direction, Point
+from environment import SnakeGameOne, SnakeGameTwo, Direction, Point
 from model import Linear_QNet, QTrainer
-from helper import plot, plot_two
+from ui import plot, plot_two
 
 MAX_MEMORY = 100_000
 BATCH_SIZE = 1000
@@ -78,8 +78,7 @@ class Agent:
         self.trainer.train_step(state, action, reward, next_state, done)
 
     def get_action(self, state):
-        # Random move = tradeoff of exploration/exploitation
-        self.epsilon = 80 - self.num_games
+        self.epsilon = self.epsilon - self.num_games
         action = [0, 0, 0]
         if random.randint(0, 200) < self.epsilon:
             move = random.randint(0, 2)
@@ -160,7 +159,7 @@ class AgentTwo:
 
     def get_action(self, state):
         # Random move = tradeoff of exploration/exploitation
-        self.epsilon = 80 - self.num_games
+        self.epsilon = self.epsilon - self.num_games
         action = [0, 0, 0]
         if random.randint(0, 200) < self.epsilon:
             move = random.randint(0, 2)
@@ -224,7 +223,6 @@ def train_one():
         agent.remember(state_old, action, reward, state_new, done)
 
         if done:
-            # Train long memory, plot result
             game.reset()
             agent.num_games += 1
             agent.train_long_memory()
@@ -254,6 +252,9 @@ def train_two():
     agent = Agent()
     agent2 = AgentTwo()
     game = SnakeGameTwo()
+
+    # if agent.num_games == 1000:
+    #     time = 0
 
     while True:
 
@@ -298,20 +299,21 @@ def train_two():
         agent.remember(state_old, action, reward, state_new, done)
         agent2.remember(state_old2, action2, reward2, state_new2, done)
 
-        if done:
+        if done:        
             # Train long memory, plot result
             game.reset()
             agent.num_games += 1
+            agent2.num_games += 1
             agent.train_long_memory()
             agent2.train_long_memory()
 
             if score > record:
                 record = score
-                agent.model.save()
+                agent.model.save("agent1_model.pth")
             
             if score2 > record2:
                 record2 = score2
-                agent2.model.save()
+                agent2.model.save("agent2_model.pth")
 
             print('Game', agent.num_games, 'Blue Score/Record:', str(score) + '/' + str(record), 'Green Score/Record:', str(score2) + '/' + str(record2), 'Winner:', winner)
 
@@ -320,10 +322,11 @@ def train_two():
             total_score_one += score
             total_score_two += score2
             mean_score_one = total_score_one / agent.num_games
-            mean_score_two = total_score_one / agent.num_games
+            mean_score_two = total_score_two / agent2.num_games
             plot_mean_score_one.append(mean_score_one)
             plot_mean_score_two.append(mean_score_two)
             plot_two(plot_score_one, plot_score_two, plot_mean_score_one, plot_mean_score_two)
+
 
 if __name__ == '__main__':
     snake_count = int(input("Choose the number of snakes (1 or 2): "))
