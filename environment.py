@@ -20,20 +20,21 @@ INNER_GREEN = (144, 238, 144)
 OUTER_GREEN = (60, 179, 113)
 WHITE = (255, 255, 255)
 GREY = (128, 128, 128)
-RED = (139, 0, 0)
+INNER_RED = (139, 0, 0)
+OUTER_RED = (220, 20, 60)
 BLACK = (0, 0, 0)
 CHARCOAL = (255, 87, 51)
 
 
 BLOCK_SIZE = 20
-SPEED = 20
+SPEED = 2000
 
 class SnakeGameOne:
 
-    def __init__(self, width=600, height=400):
-        self.lr = 0.001 # Learning rate
-        self.epsilon = 0  # Randomness
-        self.gamma = 0.9  # Discount rate (must be less than 1)
+    def __init__(self, width=640, height=480):
+        self.lr = 0.001 
+        self.epsilon = 80  
+        self.gamma = 0.9  
         self.width = width
         self.height = height
         self.display = pygame.display.set_mode((self.width, self.height))
@@ -95,7 +96,8 @@ class SnakeGameOne:
         for pt in self.snake:
             pygame.draw.rect(self.display, GREY, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
             pygame.draw.rect(self.display, WHITE, pygame.Rect(pt.x + 4, pt.y + 4, 12, 12))
-        pygame.draw.rect(self.display, RED, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
+        pygame.draw.rect(self.display, INNER_RED, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
+        pygame.draw.rect(self.display, OUTER_RED, pygame.Rect(self.food.x + 4, self.food.y + 4, 12, 12))
         text = font.render("Score: " + str(self.score), True, WHITE)
         self.display.blit(text, [0, 0])
         # Display learning parameters
@@ -130,7 +132,7 @@ class SnakeGameOne:
 
 class SnakeGameTwo:
 
-    def __init__(self, width=600, height=400):
+    def __init__(self, width=640, height=480):
         # Game Setup
         self.lr = 0.001 # Learning rate
         self.epsilon = 0  # Randomness
@@ -232,7 +234,8 @@ class SnakeGameTwo:
         for pt in self.snake2:
             pygame.draw.rect(self.display, OUTER_GREEN, pygame.Rect(pt.x, pt.y, BLOCK_SIZE, BLOCK_SIZE))
             pygame.draw.rect(self.display, INNER_GREEN, pygame.Rect(pt.x + 4, pt.y + 4, 12, 12))
-        pygame.draw.rect(self.display, RED, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
+        pygame.draw.rect(self.display, INNER_RED, pygame.Rect(self.food.x, self.food.y, BLOCK_SIZE, BLOCK_SIZE))
+        pygame.draw.rect(self.display, OUTER_RED, pygame.Rect(self.food.x + 4, self.food.y + 4, 12, 12))
         text = font.render("Blue: " + str(self.score) + ", Green: " + str(self.score2), True, WHITE)
         self.display.blit(text, [0, 0])
         params_text = f"LR: {self.lr:.3f}, ε: {self.epsilon}, γ: {self.gamma:.2f}"

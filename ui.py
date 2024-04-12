@@ -43,11 +43,11 @@ def plot_two(score_one, score_two, mean_score_one, mean_score_two):
     
     # Plot scores
     plt.plot(score_one, label='Score 1', color='blue', linestyle='-')
-    plt.plot(score_two, label='Score 2', color='red', linestyle='-')
+    plt.plot(score_two, label='Score 2', color='green', linestyle='-')
     
     # Plot mean scores
     plt.plot(mean_score_one, label='Mean Score 1', color='darkblue', linestyle='-')
-    plt.plot(mean_score_two, label='Mean Score 2', color='darkred', linestyle='-')
+    plt.plot(mean_score_two, label='Mean Score 2', color='darkgreen', linestyle='-')
     
     plt.legend(loc='upper left')
     plt.grid(True)
